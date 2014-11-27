@@ -5,7 +5,6 @@
 #include <opencv2\highgui\highgui.hpp>
 
 #include <iostream>
-#include <fstream>
 #include <stdio.h>
 #include <boost\filesystem.hpp>
 
@@ -118,9 +117,6 @@ void checkPhoto(const char* fileName, const char* justName){
 	
 	sprintf(filename, justName);
 	cvSaveImage(filename, image);
-
-
-
 
 	cvReleaseImage(&image);
 	cvReleaseImage(&src);
