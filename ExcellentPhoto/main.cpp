@@ -7,25 +7,28 @@
 #include <iostream>
 #include <stdio.h>
 #include <boost\filesystem.hpp>
+#include <boost\property_tree\json_parser.hpp>
 
 using namespace std;
 using namespace cv;
 using namespace boost::filesystem;
 
-void checkPhoto(const char*, const char*);
+void checkPhoto(const char*);
 
 int main(int argc, char* argv[])
 {
 	
 	if (argc == 2){
 		path p(argv[1]);   // p reads clearer than argv[1] in the following code
-
+		
 		try
 		{
 			if (exists(p))    // does p actually exist?
 			{
 				if (is_regular_file(p))        // is p a regular file?   
-					cout << p << " size is " << file_size(p) << '\n';
+				//if (p.extension() == ".jpg"){
+					checkPhoto(p.string().c_str());
+				//}
 
 				else if (is_directory(p))      // is p a directory?
 				{
@@ -41,9 +44,9 @@ int main(int argc, char* argv[])
 					
 					for (vec::const_iterator it(v.begin()); it != v.end(); ++it)
 					{
-						
+
 						if (it->extension() == ".jpg")
-							checkPhoto(it->string().c_str(), it->filename().string().c_str());
+							checkPhoto(it->string().c_str());
 					}
 				}
 
@@ -60,17 +63,16 @@ int main(int argc, char* argv[])
 		}
 
 	}
-	system("pause");
 	return 0;
 }
 
-void checkPhoto(const char* fileName, const char* justName){
+void checkPhoto(const char* fileName){
 
 
 	IplImage* image = cvLoadImage(fileName, 1);
 	IplImage* src = 0;
 	src = cvCloneImage(image);
-	printf("[i] image: %s\n", fileName);
+	//printf("[i] image: %s\n", fileName);
 	assert(src != 0);
 
 	String face_cascade_name = "haarcascade_frontalface_alt.xml";
@@ -80,6 +82,8 @@ void checkPhoto(const char* fileName, const char* justName){
 	if (!face_cascade.load(face_cascade_name)){ printf("--(!)Error loading\n"); return; };
 	if (!eyes_cascade.load(eyes_cascade_name)){ printf("--(!)Error loading\n"); return; };
 
+	int peoples = 0;
+	int closedEyes = 0;
 
 	Mat frame1 = image;
 	std::vector<Rect> faces;
@@ -110,13 +114,29 @@ void checkPhoto(const char* fileName, const char* justName){
 			int radius = cvRound((eyes[j].width + eyes[j].height)*0.25);
 			circle(frame1, center, radius, Scalar(255, 0, 0), 4, 8, 0);
 		}
+		if (eyes.size() >= 1){
+		 
+			peoples++;
+
+		}
+		else
+		{
+			closedEyes++;
+		}
 	}
+	boost::property_tree::ptree json, json2;
+	json2.put<std::string>("result", "1");
+	json.put("peoples", peoples);
+	json.put("closedEyes", closedEyes);
+	json.put("mark", peoples-closedEyes/2);
+	json2.put_child("resultArray", json);
+	std::stringstream ss;
+	boost::property_tree::write_json(ss, json2);
+	cout << ss.str();
 
 
-	char filename[256];
 	
-	sprintf(filename, justName);
-	cvSaveImage(filename, image);
+	cvSaveImage(fileName, image);
 
 	cvReleaseImage(&image);
 	cvReleaseImage(&src);
