@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <stdlib.h>
 #include <boost\filesystem.hpp>
 #include <boost\property_tree\json_parser.hpp>
 
@@ -13,22 +14,28 @@ using namespace std;
 using namespace cv;
 using namespace boost::filesystem;
 
-void checkPhoto(const char*);
+void checkPhoto(const char*, const char*);
 
 int main(int argc, char* argv[])
 {
-	
-	if (argc == 2){
-		path p(argv[1]);   // p reads clearer than argv[1] in the following code
+	path mainFolder(argv[0]);
+
+	if (argc >= 3){
+
+		std::vector<string> processingRequests;
+
+		for (int i = 1; i < argc-1; i++){
+			string request(argv[i]);
+			processingRequests.push_back(request);
+		}
 		
+		path p(argv[argc - 1]);
 		try
 		{
 			if (exists(p))    // does p actually exist?
 			{
 				if (is_regular_file(p))        // is p a regular file?   
-				//if (p.extension() == ".jpg"){
-					checkPhoto(p.string().c_str());
-				//}
+					checkPhoto(p.string().c_str(), mainFolder.branch_path().string().c_str());
 
 				else if (is_directory(p))      // is p a directory?
 				{
@@ -46,7 +53,7 @@ int main(int argc, char* argv[])
 					{
 
 						if (it->extension() == ".jpg")
-							checkPhoto(it->string().c_str());
+							checkPhoto(it->string().c_str(), mainFolder.branch_path().string().c_str());
 					}
 				}
 
@@ -63,25 +70,29 @@ int main(int argc, char* argv[])
 		}
 
 	}
+	system("pause");
 	return 0;
 }
 
-void checkPhoto(const char* fileName){
-
+void checkPhoto(const char* fileName, const char* settingsDir){
 
 	IplImage* image = cvLoadImage(fileName, 1);
 	IplImage* src = 0;
 	src = cvCloneImage(image);
 	//printf("[i] image: %s\n", fileName);
 	assert(src != 0);
-
-	String face_cascade_name = "haarcascade_frontalface_alt.xml";
-	String eyes_cascade_name = "parojos.xml";
+	
+	String face_cascade_name = settingsDir;
+	face_cascade_name += "\\haarcascade_frontalface_alt.xml";
+	String eyes_cascade_name = settingsDir;
+	eyes_cascade_name += "\\parojos.xml";
+	std::cout << face_cascade_name;
 	CascadeClassifier face_cascade;
 	CascadeClassifier eyes_cascade;
-	if (!face_cascade.load(face_cascade_name)){ printf("--(!)Error loading\n"); return; };
-	if (!eyes_cascade.load(eyes_cascade_name)){ printf("--(!)Error loading\n"); return; };
 
+	if (!face_cascade.load(face_cascade_name)){ printf("--(!)Error face_cascade loading\n"); system("pause"); return; };
+	if (!eyes_cascade.load(eyes_cascade_name)){ printf("--(!)Error eyes_cascade loading\n"); system("pause"); return; };
+	
 	int peoples = 0;
 	int closedEyes = 0;
 
@@ -128,7 +139,7 @@ void checkPhoto(const char* fileName){
 	json2.put<std::string>("result", "1");
 	json.put("peoples", peoples);
 	json.put("closedEyes", closedEyes);
-	json.put("mark", peoples-closedEyes/2);
+	json.put("mark", peoples-closedEyes/2.0);
 	json2.put_child("resultArray", json);
 	std::stringstream ss;
 	boost::property_tree::write_json(ss, json2);
@@ -137,6 +148,7 @@ void checkPhoto(const char* fileName){
 
 	
 	cvSaveImage(fileName, image);
+
 
 	cvReleaseImage(&image);
 	cvReleaseImage(&src);
