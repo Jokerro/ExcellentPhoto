@@ -9,22 +9,23 @@ Image::~Image()
 {
 }
 
-std::string Image::getPath(){
-	return path;
+std::string Image::GetPath(){
+	return path.string;
 }
 
-std::string Image::getExtension(){
+std::string Image::GetExtension(){
 	return extension;
 }
 
-Rating Image::getRating(){
+Rating Image::GetRating(){
 	return rating;
 }
 
-void Image::setPath(std::string path){
+void Image::SetPath(boost::filesystem::path path){
 	this->path = path;
+	this->extension = path.extension;
 }
 
-void Image::setRating(Rating rating){
+void Image::SetRating(Rating rating){
 	this->rating = rating;
 }

@@ -91,7 +91,6 @@
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="ImageAnalyzer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="Rating.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -99,7 +98,6 @@
     <ClInclude Include="FaceAnalyzer.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImageAnalyzer.h" />
-    <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Rating.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

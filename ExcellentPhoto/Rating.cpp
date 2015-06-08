@@ -10,26 +10,26 @@ Rating::~Rating()
 {
 }
 
-float Rating::getFaceRating(){
+float Rating::GetFaceRating(){
 	return faceRating;
 }
 
-float Rating::getLigthingRating(){
+float Rating::GetLigthingRating(){
 	return lightingRating;
 }
 
-float Rating::getOverallRating(){
+float Rating::GetOverallRating(){
 	return overalRating;
 }
 
-void Rating::setFaceRating(float rating){
+void Rating::SetFaceRating(float rating){
 	faceRating = rating;
 }
 
-void Rating::setLigthingRating(float rating){
+void Rating::SetLigthingRating(float rating){
 	lightingRating = rating;
 }
 
-void Rating::setOverallRating(float rating){
+void Rating::SetOverallRating(float rating){
 	overalRating = rating;
 }

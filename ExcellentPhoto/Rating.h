@@ -11,12 +11,12 @@ public:
 	Rating();
 	~Rating();
 
-	float getLigthingRating();
-	float getFaceRating();
-	float getOverallRating();
+	float GetLigthingRating();
+	float GetFaceRating();
+	float GetOverallRating();
 
-	void setLigthingRating(float rating);
-	void setFaceRating(float rating);
-	void setOverallRating(float rating);
+	void SetLigthingRating(float rating);
+	void SetFaceRating(float rating);
+	void SetOverallRating(float rating);
 };
 

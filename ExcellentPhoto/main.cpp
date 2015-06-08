@@ -89,7 +89,7 @@ void checkPhoto(const char* fileName, const char* settingsDir){
 	std::cout << face_cascade_name;
 	CascadeClassifier face_cascade;
 	CascadeClassifier eyes_cascade;
-
+	
 	if (!face_cascade.load(face_cascade_name)){ printf("--(!)Error face_cascade loading\n"); system("pause"); return; };
 	if (!eyes_cascade.load(eyes_cascade_name)){ printf("--(!)Error eyes_cascade loading\n"); system("pause"); return; };
 	

@@ -19,5 +19,7 @@ public:
 	void FaceAnalysis();
 	Image GetImage();
 	void SetImage(Image image);
+	void SetCustomFaceCascadeClassifier(std::string cascadeClassifier);
+	void SetCustomEyesCascadeClassifier(std::string cascadeClassifier);
 };
 
