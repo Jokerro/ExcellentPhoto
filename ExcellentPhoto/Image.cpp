@@ -10,7 +10,7 @@ Image::~Image()
 }
 
 std::string Image::GetPath(){
-	return path.string;
+	return this->path.string();
 }
 
 std::string Image::GetExtension(){
@@ -23,7 +23,7 @@ Rating Image::GetRating(){
 
 void Image::SetPath(boost::filesystem::path path){
 	this->path = path;
-	this->extension = path.extension;
+	this->extension = path.extension().string();
 }
 
 void Image::SetRating(Rating rating){

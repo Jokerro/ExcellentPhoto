@@ -10,11 +10,15 @@
 #include <boost\filesystem.hpp>
 #include <boost\property_tree\json_parser.hpp>
 
+#include "ImageAnalyzer.h"
+#include "Image.h"
+
 using namespace std;
 using namespace cv;
 using namespace boost::filesystem;
 
 void checkPhoto(const char*, const char*);
+void CheckPhoto(path);
 
 int main(int argc, char* argv[])
 {
@@ -35,7 +39,8 @@ int main(int argc, char* argv[])
 			if (exists(p))    // does p actually exist?
 			{
 				if (is_regular_file(p))        // is p a regular file?   
-					checkPhoto(p.string().c_str(), mainFolder.branch_path().string().c_str());
+					//checkPhoto(p.string().c_str(), mainFolder.branch_path().string().c_str());
+					CheckPhoto(p);
 
 				else if (is_directory(p))      // is p a directory?
 				{
@@ -52,8 +57,9 @@ int main(int argc, char* argv[])
 					for (vec::const_iterator it(v.begin()); it != v.end(); ++it)
 					{
 
-						if (it->extension() == ".jpg")
-							checkPhoto(it->string().c_str(), mainFolder.branch_path().string().c_str());
+						//if (it->extension() == ".jpg")
+							//checkPhoto(it->string().c_str(), mainFolder.branch_path().string().c_str());
+							//checkPhoto(it);
 					}
 				}
 
@@ -72,6 +78,16 @@ int main(int argc, char* argv[])
 	}
 	system("pause");
 	return 0;
+}
+
+void CheckPhoto(path filePath){
+	ImageAnalyzer imageAnalyzer;
+	Image image;
+	image.SetPath(filePath);
+	imageAnalyzer.SetImage(image);
+
+	imageAnalyzer.FaceAnalysis();
+	std::cout << image.GetRating().GetOverallRating();
 }
 
 void checkPhoto(const char* fileName, const char* settingsDir){

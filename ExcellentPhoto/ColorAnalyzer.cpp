@@ -20,7 +20,3 @@ float ColorAnalyzer::GetRating(){
 int ColorAnalyzer::GetColorBalance(){
 	return colorBalance;
 }
-
-void ColorAnalyzer::GetImage(Image image){
-	this->image = image;
-}

@@ -13,15 +13,15 @@ FaceAnalyzer::~FaceAnalyzer()
 }
 
 float FaceAnalyzer::GetRating(){
-	return rating;
+	return this->rating;
 }
 
 std::vector<cv::Rect> FaceAnalyzer::GetFacesList(){
-	return facesList;
+	return this->facesList;
 }
 
 std::vector<std::vector<cv::Rect>> FaceAnalyzer::GetListOfEyesList(){
-	return listOfEyesList;
+	return this->listOfEyesList;
 }
 
 void FaceAnalyzer::SetImage(Image image){
@@ -30,23 +30,23 @@ void FaceAnalyzer::SetImage(Image image){
 
 void FaceAnalyzer::SetFaceCascadeClassifier(std::string path){
 	if (!faceCascade.load(path)){
-		throw std::ios::fail;
+		throw &std::ios::fail;
 	}
 }
 
 void FaceAnalyzer::SetEyesCascadeClassifier(std::string path){
 	if (!eyesCascade.load(path)){
-		throw std::ios::fail;
+		throw &std::ios::fail;
 	}
 }
 
 void FaceAnalyzer::Analysis(){
 	using namespace cv;
 
-	std::string imagePath = image.GetPath;
+	std::string imagePath = image.GetPath();
 	IplImage* image = cvLoadImage(imagePath.c_str(), 1);
 	if (image == 0){
-		throw std::ios::fail;
+		throw &std::ios::fail;
 	}
 	mathImageRepresent = image;
 	cvtColor(mathImageRepresent, grayMathImageRepresent, CV_BGR2GRAY);
@@ -60,8 +60,8 @@ void FaceAnalyzer::Analysis(){
 
 void FaceAnalyzer::DetectFaces(){
 	using namespace cv;
-
-	faceCascade.detectMultiScale(grayMathImageRepresent, facesList, 1.1, 2, 0 | CV_HAAR_SCALE_IMAGE, Size(80, 80));
+	
+	faceCascade.detectMultiScale(grayMathImageRepresent, GetFacesList(), 1.1, 2, 0 | CV_HAAR_SCALE_IMAGE, Size(80, 80));
 	for (size_t i = 0; i < facesList.size(); i++){
 		Point center(facesList[i].x + facesList[i].width*0.5, facesList[i].y + facesList[i].height*0.5);
 		ellipse(mathImageRepresent, center, Size(facesList[i].width*0.5, facesList[i].height*0.5), 0, 0, 360, Scalar(0, 0, 0), 4, 8, 0);
@@ -82,7 +82,7 @@ void FaceAnalyzer::DetectEyes(int faceIndex){
 }
 
 void FaceAnalyzer::CalculateRating(){
-	int facesCount = this->facesList.size();
+	int facesCount = 1;
 	int eyesCount = CountDetectedEyes();
 	this->rating = (float)facesCount / (float)eyesCount;
 }
